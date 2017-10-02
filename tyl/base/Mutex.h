@@ -41,6 +41,7 @@ public:
 private:
 	Mutex& mutex_;
 };
-}
+
+} /* namespace tyl */
 
 #endif /* TYL_BASE_MUTEX_H_ */
