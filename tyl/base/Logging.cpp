@@ -5,7 +5,10 @@
  *      Author: root
  */
 
+#include "../config.h"
 #include "Logging.h"
+#include "Timestamp.h"
+#include "CurrentThread.h"
 
 #include <algorithm>
 #include <assert.h>
@@ -172,15 +175,46 @@ LogStream& operator<<(LogStream& s, T v)
 	return s;
 }
 
-Logger::Logger(LogLevel level) : level_(level) {stream_ << T(LogLevelName[level], 6);}
-Logger::Logger(bool toAbort) : level_(toAbort ? FATAL:ERROR) {stream_ << T(LogLevelName[level_], 6);}
+Logger::Logger(SourceFile file, int line, LogLevel level)
+ : line_(line), basename_(file), level_(level)
+{
+#ifdef LOG_MSG_TIME_INFO
+	stream_ << Timestamp::now().toFormattedString();
+#endif
+#ifdef LOG_MSG_LEVEL_INFO
+	stream_ << T(LogLevelName[level_], 6);
+#endif
+#ifdef LOG_MSG_THREAD_NAME_INFO
+	stream_ << CurrentThread::t_threadName;
+#endif
+}
+
+Logger::Logger(SourceFile file, int line, bool toAbort)
+ : line_(line), basename_(file), level_(toAbort ? FATAL:ERROR)
+{
+#ifdef LOG_MSG_TIME_INFO
+	stream_ << Timestamp::now().toFormattedString();
+#endif
+#ifdef LOG_MSG_LEVEL_INFO
+	stream_ << T(LogLevelName[level_], 6);
+#endif
+#ifdef LOG_MSG_THREAD_NAME_INFO
+	stream_ << CurrentThread::t_threadName;
+#endif
+}
+
 Logger::~Logger()
 {
+#ifdef LOG_MSG_FILE_LINE_INFO
+	stream_ << " - " << basename_ << ':' << line_ << '\n';
+#else
 	stream_ << '\n';
+#endif
 	const LogBuffer& buf = stream_.buffer();
 	g_output(buf.data(), buf.length());
 	if(level_ == FATAL)
 	{
+		g_flush();
 		abort();
 	}
 }

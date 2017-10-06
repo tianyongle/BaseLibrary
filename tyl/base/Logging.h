@@ -133,8 +133,36 @@ public:
 	typedef void (*FlushFunc)();
 	enum LogLevel { TRACE, DEBUG, INFO, WARNG, ERROR, FATAL, NUM_LOG_LEVELS, };
 
-	Logger(LogLevel level);
-	Logger(bool toAbort);
+	class SourceFile
+	{
+	public:
+		template<int N>
+		inline SourceFile(const char (&arr)[N]) : data_(arr), size_(N-1)
+		{
+			const char* slash = strrchr(data_, '/'); // builtin function
+			if (slash)
+			{
+				data_ = slash + 1;
+				size_ -= static_cast<int>(data_ - arr);
+			}
+		}
+
+		explicit SourceFile(const char* filename) : data_(filename)
+		{
+			const char* slash = strrchr(filename, '/');
+			if (slash)
+			{
+				data_ = slash + 1;
+			}
+			size_ = static_cast<int>(strlen(data_));
+		}
+
+		const char* data_;
+		int size_;
+	};
+
+	Logger(SourceFile file, int line, LogLevel level);
+	Logger(SourceFile file, int line, bool toAbort);
 	~Logger();
 
 	LogStream& stream() { return stream_; }
@@ -144,6 +172,8 @@ public:
 	static void setOutput(OutputFunc);
 	static void setFlush(FlushFunc);
 private:
+	int line_;
+	SourceFile basename_;
 	LogLevel level_;
 	LogStream stream_;
 };
@@ -155,6 +185,11 @@ inline Logger::LogLevel Logger::logLevel()
   return g_logLevel;
 }
 
+inline LogStream& operator<<(LogStream& s, Logger::SourceFile& file)
+{
+  s.append(file.data_, file.size_);
+  return s;
+}
 //
 // CAUTION: do not write:
 //
@@ -171,12 +206,15 @@ inline Logger::LogLevel Logger::logLevel()
 //   else
 //     logWarnStream << "Bad news";
 //
-#define LTRACE if(tyl::Logger::logLevel() <= tyl::Logger::TRACE) tyl::Logger(tyl::Logger::TRACE).stream()
-#define LDEBUG if(tyl::Logger::logLevel() <= tyl::Logger::DEBUG) tyl::Logger(tyl::Logger::DEBUG).stream()
-#define LINFO if(tyl::Logger::logLevel() <= tyl::Logger::INFO) tyl::Logger(tyl::Logger::INFO).stream()
-#define LWARNG tyl::Logger(tyl::Logger::WARNG).stream()
-#define LERROR tyl::Logger(tyl::Logger::ERROR).stream()
-#define LFATAL tyl::Logger(tyl::Logger::FATAL).stream()
+#define LTRACE if(tyl::Logger::logLevel() <= tyl::Logger::TRACE) \
+	tyl::Logger(__FILE__, __LINE__, tyl::Logger::TRACE).stream()
+#define LDEBUG if(tyl::Logger::logLevel() <= tyl::Logger::DEBUG) \
+	tyl::Logger(__FILE__, __LINE__, tyl::Logger::DEBUG).stream()
+#define LINFO if(tyl::Logger::logLevel() <= tyl::Logger::INFO) \
+	tyl::Logger(__FILE__, __LINE__, tyl::Logger::INFO).stream()
+#define LWARNG tyl::Logger(__FILE__, __LINE__, tyl::Logger::WARNG).stream()
+#define LERROR tyl::Logger(__FILE__, __LINE__, tyl::Logger::ERROR).stream()
+#define LFATAL tyl::Logger(__FILE__, __LINE__, tyl::Logger::FATAL).stream()
 
 } /* namespace tyl */
 

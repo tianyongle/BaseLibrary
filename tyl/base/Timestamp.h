@@ -25,6 +25,8 @@ public:
 	std::string toFormattedString(bool showMicroseconds = true) const;
 
 	static Timestamp now();
+	static time_t lastTime;
+	static std::string lastFmatTime;
 	static const int kMicroSecondsPerMsec = 1000;
 	static const int kMicroSecondsPerSecond = 1000000;
 private:
