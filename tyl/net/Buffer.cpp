@@ -10,8 +10,7 @@
 #include <errno.h>
 #include <sys/uio.h>
 
-namespace tyl
-{
+using namespace tyl;
 
 const char Buffer::kCRLF[] = "\r\n";
 const size_t Buffer::kCheapPrepend = 32;
@@ -50,5 +49,3 @@ ssize_t Buffer::readFd(int fd, int* savedErrno)
 	// }
 	return n;
 }
-
-} /* namespace tyl */

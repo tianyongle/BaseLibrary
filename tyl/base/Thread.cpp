@@ -9,9 +9,7 @@
 #include "Thread.h"
 #include "Logging.h"
 #include "CurrentThread.h"
-
-namespace tyl
-{
+using namespace tyl;
 
 void* startThread(void* obj)
 {
@@ -20,24 +18,24 @@ void* startThread(void* obj)
 	return NULL;
 }
 
-AtomicInt32 Thread::sNum;
+AtomicInt32 Thread::s_numCreated_;
 
 void afterFork()
 {
-  CurrentThread::t_cachedTid = 0;
-  CurrentThread::t_threadName = "thread-main ";
-  CurrentThread::tid();
+	tyl::CurrentThread::t_cachedTid = 0;
+	tyl::CurrentThread::t_threadName = "thread-main ";
+	tyl::CurrentThread::tid();
 }
 
 class ThreadNameInitializer
 {
- public:
-  ThreadNameInitializer()
-  {
-    CurrentThread::t_threadName = "thread-main ";
-    CurrentThread::tid();
-    pthread_atfork(NULL, NULL, &afterFork);
-  }
+public:
+	ThreadNameInitializer()
+	{
+		tyl::CurrentThread::t_threadName = "thread-main ";
+		tyl::CurrentThread::tid();
+		pthread_atfork(NULL, NULL, &afterFork);
+	}
 };
 
 ThreadNameInitializer init;
@@ -55,7 +53,7 @@ Thread::~Thread()
 
 void Thread::setDefaultName()
 {
-	int num = sNum.IncrementAndGet();
+	int num = s_numCreated_.IncrementAndGet();
 	if (name_.size() < 8)
 	{
 		char buf[8];
@@ -96,5 +94,3 @@ void Thread::start()
 		latch_.wait();
 	}
 }
-
-} /* namespace tyl */

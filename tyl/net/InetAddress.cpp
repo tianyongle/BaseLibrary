@@ -11,8 +11,7 @@
 #include <endian.h>
 #include <string.h> //bzero()
 
-namespace tyl
-{
+using namespace tyl;
 
 InetAddress::InetAddress(uint16_t port, bool loopbackOnly)
 {
@@ -55,5 +54,3 @@ std::string InetAddress::ToIp() const
 	::inet_ntop(AF_INET, &addr_.sin_addr, buf, static_cast<socklen_t>(sizeof(buf)));
 	return buf;
 }
-
-} /* namespace tyl */

@@ -12,6 +12,7 @@
 #include "../base/Timestamp.h"
 
 #include "../net/Buffer.h"
+#include "../net/InetAddress.h"
 
 #include <iostream>
 using namespace std;
@@ -19,6 +20,8 @@ using namespace std;
 
 int main()
 {
+	tyl::InetAddress addr(INADDR_LOOPBACK, 1234);
+	LINFO << addr.ToIpPort();
 	return 0;
 }
 

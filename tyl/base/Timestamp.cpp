@@ -10,8 +10,7 @@
 #include <sys/time.h>
 #include "Timestamp.h"
 
-namespace tyl
-{
+using namespace tyl;
 
 time_t Timestamp::lastTime = 0;
 std::string Timestamp::lastFmatTime;
@@ -62,5 +61,3 @@ Timestamp Timestamp::now()
   int64_t seconds = tv.tv_sec;
   return Timestamp(seconds * kMicroSecondsPerSecond + tv.tv_usec);
 }
-
-} /* namespace tyl */

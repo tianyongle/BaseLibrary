@@ -10,8 +10,7 @@
 
 #include "Condition.h"
 
-namespace tyl
-{
+using namespace tyl;
 
 bool Condition::waitForSeconds(int64_t usec)
 {
@@ -25,6 +24,4 @@ bool Condition::waitForSeconds(int64_t usec)
 
 	MutexLock lock(mutex_);
 	return ETIMEDOUT == pthread_cond_timedwait(&pcond_, mutex_.getMutex(), &abstime);
-}
-
 }

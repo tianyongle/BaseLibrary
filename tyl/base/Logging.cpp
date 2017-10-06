@@ -17,8 +17,7 @@
 #include <stdio.h>
 #include <boost/type_traits/is_arithmetic.hpp>
 
-namespace tyl
-{
+using namespace tyl;
 
 const char digits[] = "9876543210123456789ABCDEF";
 const char* zero = digits + 9;
@@ -133,6 +132,8 @@ void LogStream::formatInteger(T v)
 	}
 }
 
+namespace tyl
+{
 Logger::LogLevel initLogLevel()
 {
   if (::getenv("TYL_LOG_TRACE"))
@@ -160,6 +161,7 @@ void defaultFlush()
 Logger::LogLevel g_logLevel = initLogLevel();
 Logger::OutputFunc g_output = defaultOutput;
 Logger::FlushFunc g_flush = defaultFlush;
+}
 
 class T
 {
@@ -233,5 +235,3 @@ void Logger::setFlush(FlushFunc flush)
 {
 	g_flush = flush;
 }
-
-} /* namespace tyl */

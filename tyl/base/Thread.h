@@ -38,7 +38,7 @@ private:
 	std::string    name_;
 	Sem            latch_;
 
-	static AtomicInt32 sNum;
+	static AtomicInt32 s_numCreated_;
 };
 
 } /* namespace tyl */
