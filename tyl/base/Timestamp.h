@@ -58,6 +58,12 @@ inline bool operator!=(Timestamp lhs, Timestamp rhs)
 	return lhs.MicroSeconds() != rhs.MicroSeconds();
 }
 
+inline Timestamp AddTime(Timestamp timestamp, double seconds)
+{
+	int64_t delta = static_cast<int64_t>(seconds * Timestamp::kMicroSecondsPerSecond);
+	return Timestamp(timestamp.MicroSeconds() + delta);
+}
+
 } /* namespace tyl */
 
 #endif /* TYL_BASE_TIMESTAMP_H_ */

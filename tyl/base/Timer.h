@@ -28,6 +28,14 @@ public:
 		repeat_(interval > 0.0),
 		sequence_(s_numCreated_.IncrementAndGet())
 	{ }
+
+	void run() const { callback_(); }
+
+	Timestamp expiration() const  { return expiration_; }
+	bool repeat() const { return repeat_; }
+	int64_t sequence() const { return sequence_; }
+
+	void restart(Timestamp now);
 private:
 	const TimerCallback callback_;
 	Timestamp expiration_;
@@ -36,6 +44,12 @@ private:
 	const int64_t sequence_;
 
 	static AtomicInt64 s_numCreated_;
+};
+
+class TimerId
+{
+public:
+private:
 };
 
 } /* namespace tyl */
