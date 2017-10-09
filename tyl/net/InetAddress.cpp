@@ -11,7 +11,7 @@
 #include <endian.h>
 #include <string.h> //bzero()
 
-using namespace tyl;
+using namespace tyl::net;
 
 InetAddress::InetAddress(uint16_t port, bool loopbackOnly)
 {

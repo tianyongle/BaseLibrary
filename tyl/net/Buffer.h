@@ -20,7 +20,8 @@
 
 namespace tyl
 {
-
+namespace net
+{
 /// @code
 /// +-------------------+------------------+------------------+
 /// | prependable bytes |  readable bytes  |  writable bytes  |
@@ -309,6 +310,7 @@ private:
 	static const size_t kInitialSize;
 };
 
+} /* namespace net */
 } /* namespace tyl */
 
 #endif /* TYL_NET_BUFFER_H_ */

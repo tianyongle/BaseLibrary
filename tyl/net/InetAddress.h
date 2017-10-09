@@ -14,7 +14,8 @@
 
 namespace tyl
 {
-
+namespace net
+{
 class InetAddress
 {
 public:
@@ -34,6 +35,7 @@ private:
 	struct sockaddr_in addr_;
 };
 
-}// namespace tyl
+} /* namespace net */
+} /* namespace tyl */
 
 #endif /* TYL_NET_INETADDRESS_H_ */

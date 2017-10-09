@@ -17,10 +17,11 @@
 namespace tyl
 {
 
+typedef boost::function<void()> TimerCallback;
+
 class Timer : boost::noncopyable
 {
 public:
-	typedef boost::function<void()> TimerCallback;
 	Timer(const TimerCallback& cb, Timestamp when, double interval)
 	  : callback_(cb),
 		expiration_(when),
@@ -49,7 +50,14 @@ private:
 class TimerId
 {
 public:
+	TimerId() : timer_(NULL), sequence_(0) { }
+	TimerId(Timer* timer, int64_t seq) : timer_(timer), sequence_(seq) { }
+	~TimerId() {}
+
+	friend class TimerQueue;
 private:
+	Timer* timer_;
+	int64_t sequence_;
 };
 
 } /* namespace tyl */

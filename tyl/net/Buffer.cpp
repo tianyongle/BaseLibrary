@@ -10,7 +10,7 @@
 #include <errno.h>
 #include <sys/uio.h>
 
-using namespace tyl;
+using namespace tyl::net;
 
 const char Buffer::kCRLF[] = "\r\n";
 const size_t Buffer::kCheapPrepend = 32;
